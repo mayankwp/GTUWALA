@@ -190,6 +190,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin check route
+  app.get('/api/admin/check', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      if (!user?.isAdmin) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      res.json({ isAdmin: true });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to check admin status" });
+    }
+  });
+
   // Public API routes
   app.get('/api/notifications/active', async (req, res) => {
     try {

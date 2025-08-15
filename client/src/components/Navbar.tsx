@@ -8,7 +8,7 @@ import { Button } from './ui/button';
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -36,6 +36,11 @@ export default function Navbar() {
             <Link href="/contact" className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-pink-500 transition-colors font-medium">
               Contact
             </Link>
+            {isAuthenticated && (user as any)?.isAdmin && (
+              <Link href="/admin" className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-pink-500 transition-colors font-medium">
+                Admin
+              </Link>
+            )}
 
             {/* Dark Mode Toggle */}
             <Button
@@ -100,6 +105,11 @@ export default function Navbar() {
             <Link href="/contact" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-pink-500 transition-colors font-medium">
               Contact
             </Link>
+            {isAuthenticated && (user as any)?.isAdmin && (
+              <Link href="/admin" className="block text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-pink-500 transition-colors font-medium">
+                Admin
+              </Link>
+            )}
             {isAuthenticated ? (
               <Button
                 onClick={() => window.location.href = '/api/logout'}
