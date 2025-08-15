@@ -1,0 +1,532 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTUWALA - Download GTU Papers, Notes & Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-blue': '#3B82F6',
+                        'primary-pink': '#EC4899',
+                        'dark-bg': '#0F172A',
+                        'dark-card': '#1E293B',
+                        'dark-text': '#F1F5F9',
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            },
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .gradient-progress {
+            height: 4px;
+            background: linear-gradient(90deg, #3B82F6 0%, #EC4899 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            transition: width 0.3s ease;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #3B82F6 0%, #EC4899 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .icon-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover .icon-hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-dark-text transition-colors duration-300">
+    <!-- Progress Bar -->
+    <div id="progressBar" class="gradient-progress" style="width: 0%"></div>
+    
+    <!-- Alert Notification Bar -->
+    <div id="alertBar" class="bg-gradient-to-r from-primary-blue to-primary-pink text-white py-3 px-4 text-center text-sm font-medium relative">
+        <span>🎉 New GTU Papers Added! Download latest question papers for Winter 2024 exams.</span>
+        <button onclick="dismissAlert()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-200 transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-dark-card shadow-lg sticky top-0 z-40 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold bg-gradient-to-r from-primary-blue to-primary-pink bg-clip-text text-transparent">
+                        GTUWALA
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-primary-blue dark:hover:text-primary-pink transition-colors font-medium">Home</a>
+                    <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-primary-blue dark:hover:text-primary-pink transition-colors font-medium">Blog</a>
+                    <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-primary-blue dark:hover:text-primary-pink transition-colors font-medium">Contact</a>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <i id="darkModeIcon" class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                    
+                    <!-- Login Button -->
+                    <button class="bg-gradient-to-r from-primary-blue to-primary-pink text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all">
+                        Login
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-moon dark:hidden text-sm"></i>
+                        <i class="fas fa-sun hidden dark:inline text-sm"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <i id="mobileMenuIcon" class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white dark:bg-dark-card border-t border-gray-200 dark:border-gray-700">
+            <div class="px-4 py-3 space-y-3">
+                <a href="#" class="block text-gray-700 dark:text-gray-300 hover:text-primary-blue dark:hover:text-primary-pink transition-colors font-medium">Home</a>
+                <a href="#" class="block text-gray-700 dark:text-gray-300 hover:text-primary-blue dark:hover:text-primary-pink transition-colors font-medium">Blog</a>
+                <a href="#" class="block text-gray-700 dark:text-gray-300 hover:text-primary-blue dark:hover:text-primary-pink transition-colors font-medium">Contact</a>
+                <button class="w-full bg-gradient-to-r from-primary-blue to-primary-pink text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient py-20 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 animate-float">
+                Download GTU Papers, Notes & Tools – All in One Place
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
+                Access thousands of GTU question papers, study materials, and powerful tools designed specifically for GTU students. Everything you need to excel in your exams.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button class="bg-white text-primary-blue px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                    <i class="fas fa-download mr-2"></i>
+                    Download Papers
+                </button>
+                <button class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary-blue transition-all">
+                    <i class="fab fa-telegram mr-2"></i>
+                    Join Telegram
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        <!-- Explore GTU Study Resources Section -->
+        <section class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    Explore GTU Study Resources
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Access comprehensive study materials for all GTU courses and branches
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- GTU Papers Card -->
+                <div class="card-hover bg-white dark:bg-dark-card rounded-2xl p-8 shadow-lg cursor-pointer">
+                    <div class="text-center">
+                        <div class="icon-hover bg-gradient-to-br from-blue-500 to-blue-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-file-pdf text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">GTU Papers</h3>
+                        <p class="text-gray-600 dark:text-gray-400">GTU All Courses, Branches All Years Question Papers PDFs Download</p>
+                    </div>
+                </div>
+                
+                <!-- GTU Syllabus Card -->
+                <div class="card-hover bg-white dark:bg-dark-card rounded-2xl p-8 shadow-lg cursor-pointer">
+                    <div class="text-center">
+                        <div class="icon-hover bg-gradient-to-br from-green-500 to-green-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-book text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">GTU Syllabus</h3>
+                        <p class="text-gray-600 dark:text-gray-400">GTU All Courses, Branches & Subjects Syllabus PDFs Download</p>
+                    </div>
+                </div>
+                
+                <!-- GTU Study Material Card -->
+                <div class="card-hover bg-white dark:bg-dark-card rounded-2xl p-8 shadow-lg cursor-pointer">
+                    <div class="text-center">
+                        <div class="icon-hover bg-gradient-to-br from-purple-500 to-purple-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">GTU Study Material</h3>
+                        <p class="text-gray-600 dark:text-gray-400">GTU Study Material Free Download. Adding New Study Materials Daily.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GTU Toolbox Section -->
+        <section class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    GTU Toolbox
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Powerful tools and calculators designed specifically for GTU students
+                </p>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Tool Cards -->
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-blue-500 to-indigo-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-calculator text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">SPI/CPI/CGPA Calculator</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Calculate your semester and cumulative performance index</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-green-500 to-emerald-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-bullhorn text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">GTU Circulars</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Latest GTU circulars with advanced features</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-purple-500 to-violet-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-calendar-alt text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Academic Calendar</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">GTU academic calendar with advanced features</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-red-500 to-pink-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-line text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">GTU Result</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Check GTU results with advanced features</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-yellow-500 to-orange-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-lightbulb text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">GTU Tips & Solutions</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Paper solutions, viva tips, and writing answers</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-cyan-500 to-blue-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-users text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Student Community</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Connect with GTU students community</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-indigo-500 to-purple-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-exchange-alt text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">SPI to CPI Calculator</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Convert SPI to CPI with accurate calculations</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-red-500 to-rose-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Backlog Checker</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Manual backlog checker tool for students</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-green-500 to-teal-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-percentage text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Attendance Calculator</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Calculate your attendance percentage</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-orange-500 to-red-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-clock text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Exam Countdown</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Countdown timer for upcoming exams</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-pink-500 to-purple-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-stopwatch text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Study Timer</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Pomodoro study timer for effective learning</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-teal-500 to-cyan-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-file-import text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Paper Merge Tool</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Merge multiple PDF papers into one file</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-xl p-6 shadow-lg cursor-pointer">
+                    <div class="icon-hover bg-gradient-to-br from-violet-500 to-purple-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-heart text-white text-lg"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Contribute</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Help improve GTUWALA by contributing</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose GTUWALA Section -->
+        <section class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    Why Choose GTUWALA?
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Trusted by thousands of GTU students for reliable study resources
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-white dark:bg-dark-card rounded-2xl p-8 shadow-lg text-center">
+                    <div class="icon-hover bg-gradient-to-br from-green-500 to-emerald-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-bolt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Fast & Reliable</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Quick access to all study materials with high-speed downloads</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-2xl p-8 shadow-lg text-center">
+                    <div class="icon-hover bg-gradient-to-br from-blue-500 to-indigo-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-sync-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Regular Updates</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Daily updates with latest papers and study materials</p>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-dark-card rounded-2xl p-8 shadow-lg text-center">
+                    <div class="icon-hover bg-gradient-to-br from-purple-500 to-pink-600 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-gift text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Free Forever</h3>
+                    <p class="text-gray-600 dark:text-gray-400">All resources available free of cost for students</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-gray-950 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="col-span-2 md:col-span-1">
+                    <div class="text-2xl font-bold bg-gradient-to-r from-primary-blue to-primary-pink bg-clip-text text-transparent mb-4">
+                        GTUWALA
+                    </div>
+                    <p class="text-gray-400 mb-6">Your ultimate destination for GTU study resources, papers, and academic tools.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary-blue transition-colors text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-blue transition-colors text-xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-blue transition-colors text-xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-blue transition-colors text-xl">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="font-semibold text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Use</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h3 class="font-semibold text-white mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">GTU Papers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">GTU Syllabus</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Study Materials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Calculator Tools</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Academic Calendar</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Connect -->
+                <div>
+                    <h3 class="font-semibold text-white mb-4">Connect With Us</h3>
+                    <p class="text-gray-400 mb-4">Join our community of GTU students and stay updated with latest resources.</p>
+                    <button class="bg-gradient-to-r from-primary-blue to-primary-pink text-white px-6 py-2 rounded-lg font-medium hover:shadow-lg transition-all">
+                        Join Community
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 GTUWALA. All rights reserved. Made with ❤️ for GTU students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="fixed bottom-6 right-6 bg-gradient-to-r from-primary-blue to-primary-pink text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-40">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Progress Bar
+        (function() {
+            function updateProgressBar() {
+                const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                document.getElementById('progressBar').style.width = scrolled + '%';
+            }
+            
+            window.addEventListener('scroll', updateProgressBar);
+        })();
+
+        // Scroll to Top Button
+        (function() {
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            
+            function toggleScrollToTop() {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                    scrollToTopBtn.classList.add('opacity-100');
+                } else {
+                    scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                    scrollToTopBtn.classList.remove('opacity-100');
+                }
+            }
+            
+            window.addEventListener('scroll', toggleScrollToTop);
+            
+            scrollToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize theme on page load
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuIcon = document.getElementById('mobileMenuIcon');
+            
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenuIcon.classList.remove('fa-bars');
+                mobileMenuIcon.classList.add('fa-times');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenuIcon.classList.remove('fa-times');
+                mobileMenuIcon.classList.add('fa-bars');
+            }
+        }
+
+        // Dismiss Alert
+        function dismissAlert() {
+            const alertBar = document.getElementById('alertBar');
+            alertBar.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                alertBar.style.display = 'none';
+            }, 300);
+        }
+
+        // TODO: Implement business logic for:
+        // - User authentication and login system
+        // - Blog functionality with star ratings and comments
+        // - Admin panel for content management
+        // - Individual tool pages and calculators
+        // - API integrations for GTU data
+        // - Search functionality for papers and materials
+        // - User profile and preferences
+        // - Community features and forums
+    </script>
+</body>
+</html>
