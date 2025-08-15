@@ -44,7 +44,7 @@ export default function Blog() {
         </p>
       </div>
 
-      {posts && posts.length > 0 ? (
+      {Array.isArray(posts) && posts.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post: any) => (
             <Link key={post.id} href={`/blog/${post.id}`}>

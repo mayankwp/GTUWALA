@@ -9,7 +9,7 @@ export default function AlertBar() {
     queryKey: ['/api/notifications/active'],
   });
 
-  const activeNotification = notifications?.[0];
+  const activeNotification = Array.isArray(notifications) ? notifications[0] : null;
 
   useEffect(() => {
     // Reset dismissed state when notification changes

@@ -134,7 +134,7 @@ export default function BlogPost() {
     );
   }
 
-  if (!post) {
+  if (!post || typeof post !== 'object' || !('title' in post)) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <div className="text-6xl mb-4">📄</div>
@@ -153,14 +153,14 @@ export default function BlogPost() {
       {/* Post Content */}
       <article className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {post.title}
+          {(post as any).title}
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mb-8">
-          Published {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+          Published {formatDistanceToNow(new Date((post as any).createdAt), { addSuffix: true })}
         </p>
         <div className="prose prose-lg dark:prose-invert max-w-none">
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-            {post.content}
+            {(post as any).content}
           </p>
         </div>
       </article>
@@ -250,7 +250,7 @@ export default function BlogPost() {
                   <Skeleton className="h-16 w-full" />
                 </div>
               ))
-            ) : comments && comments.length > 0 ? (
+            ) : Array.isArray(comments) && comments.length > 0 ? (
               comments.map((comment: any) => (
                 <div key={comment.id} className="border-l-4 border-blue-500 pl-4">
                   <div className="flex items-center space-x-2 mb-2">

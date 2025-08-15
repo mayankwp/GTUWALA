@@ -191,7 +191,7 @@ export default function AdminPanel() {
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {notifications?.map((notification: any) => (
+              {Array.isArray(notifications) && notifications.map((notification: any) => (
                 <NotificationEditor
                   key={notification.id}
                   notification={notification}
@@ -220,7 +220,7 @@ export default function AdminPanel() {
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {resourceCards?.map((card: any) => (
+              {Array.isArray(resourceCards) && resourceCards.map((card: any) => (
                 <ResourceCardEditor
                   key={card.id}
                   card={card}
