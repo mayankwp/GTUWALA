@@ -1,0 +1,124 @@
+
+Product Requirements Document (PRD)
+
+Project Name: GTUWALA
+Target Audience: GTU Diploma & Degree Students (Age 17–25)
+
+---
+
+1. Website Theme and Global Features
+- By default, the website should open in Light Mode.
+- Dark mode toggle option should be available so the user can enable or disable dark mode as they wish.
+- Add a Scroll Progress Bar at the top in gradient color (blue to pink) across all pages.
+- Add a "Scroll to Top" button on all pages.
+- Add an Alert Notification bar on top of the website with close/dismiss functionality, visible site-wide.
+- All animations must be smooth.
+- The website must be super mobile-friendly, optimized for mobile menus and layouts.
+
+---
+
+2. Login System
+- Login is NOT mandatory for users; they can access all content without logging in.
+- Users will only need to log in if they want to:
+  1. Comment on blog posts
+  2. Share any resources
+  3. Request contact/support
+- These login-based functionalities will be added later.
+- Admin Login:
+  - Username: **admin**
+  - Password: **0114545454**
+
+---
+
+3. Home Page Content
+Hero Section:
+- Title: "Download GTU Papers, Notes & Tools – All in One Place"
+- Add short description.
+- Add Call-to-Action Buttons:
+  - Download Paper
+  - Join Telegram
+
+---
+
+4. Section: Explore GTU Study Resources
+- 3 clickable cards with icons.
+- On hover, card and icon should animate.
+- Clicking a card navigates to a new page (design later).
+
+Cards:
+1. GTU Papers – Summary: GTU All Courses, Branches All Years Question Papers PDFs Download
+2. GTU Syllabus – Summary: GTU All Courses, Branches & Subjects Syllabus PDFs Download
+3. GTU Study Material – Summary: GTU Study Material Free Download. Adding New Study Materials Daily.
+
+---
+
+5. Section: GTU Toolbox
+- 13 clickable cards with icons.
+- Hover animation for card and icon.
+- Each card redirects to individual tool/page (design later).
+
+Cards List:
+1. SPI/CPI/CGPA to Percentage Calculator
+2. GTU Circulars [With Advance Features]
+3. GTU Academic Calendar [With Advance Features]
+4. GTU Result [With Advance Features]
+5. GTU Tips, Paper Solution, Viva, Writing Answers
+6. GTU Student Community
+7. SPI to CPI Calculator
+8. Backlog Checker Tool (Manual)
+9. Attendance % Calculator
+10. Exam Countdown Timer
+11. Study Timer Tool (Pomodoro)
+12. Paper Merge Tool
+13. Contribute
+
+---
+
+6. Section: Why Choose GTUWALA?
+- 3 cards with icons.
+- Cards and icons have hover animations.
+
+Cards:
+1. Fast & Reliable – Quick access to all study materials with high-speed downloads
+2. Regular Updates – Daily updates with latest papers and study materials
+3. Free Forever – All resources available free of cost for students
+
+---
+
+7. Footer Section
+- Modern and professional footer.
+- Quick Links:
+  - Home
+  - Blog
+  - Privacy Policy
+  - Terms of Use
+  - Contact
+- Resources:
+- Connect With Us:
+  - Social Media Link Icons
+
+---
+
+8. Blog Functionality
+Navigation:
+- Add "Blog" menu item in the website navbar.
+- Clicking opens the blog listing page.
+
+ /blog Page:
+- Page Title: "Latest Posts"
+- Blog layout: Post grid layout
+
+Full Blog Post Page:
+- Star rating system – Rating allowed only via Google login
+- Comment section – Commenting allowed only via Google login
+
+---
+
+9. Admin Panel
+- admn penal only for admin
+- Manage notification content
+- Manage all home page cards & define which page opens when clicked
+- Control all homepage elements from the panel
+- Other pages management will be added later
+
+END OF PRD
