@@ -223,6 +223,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/resource-cards/all', async (req, res) => {
+    try {
+      const cards = await storage.getResourceCards();
+      res.json(cards);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch all resource cards" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

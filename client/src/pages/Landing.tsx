@@ -1,65 +1,50 @@
-import { Download, Send, FileText, Book, GraduationCap, Zap, RotateCcw, Gift, Calculator, Megaphone, Calendar, TrendingUp, Lightbulb, Users, ArrowUpDown, AlertTriangle, Percent, Clock, Timer, FileInput, Heart } from 'lucide-react';
+import { Download, Send } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
+import { useQuery } from '@tanstack/react-query';
+import DynamicIcon from '../components/DynamicIcon';
+import { Skeleton } from '../components/ui/skeleton';
 
 export default function Landing() {
-  const resourceCards = [
-    {
-      icon: <FileText className="w-8 h-8 text-white" />,
-      title: "GTU Papers",
-      description: "GTU All Courses, Branches All Years Question Papers PDFs Download",
-      gradient: "from-blue-500 to-blue-600"
-    },
-    {
-      icon: <Book className="w-8 h-8 text-white" />,
-      title: "GTU Syllabus", 
-      description: "GTU All Courses, Branches & Subjects Syllabus PDFs Download",
-      gradient: "from-green-500 to-green-600"
-    },
-    {
-      icon: <GraduationCap className="w-8 h-8 text-white" />,
-      title: "GTU Study Material",
-      description: "GTU Study Material Free Download. Adding New Study Materials Daily.",
-      gradient: "from-purple-500 to-purple-600"
-    }
-  ];
+  // Fetch cards from database
+  const { data: allCards, isLoading } = useQuery({
+    queryKey: ['/api/resource-cards'],
+  });
 
-  const toolboxCards = [
-    { icon: <Calculator className="w-6 h-6 text-white" />, title: "SPI/CPI/CGPA Calculator", description: "Calculate your semester and cumulative performance index", gradient: "from-blue-500 to-indigo-600" },
-    { icon: <Megaphone className="w-6 h-6 text-white" />, title: "GTU Circulars", description: "Latest GTU circulars with advanced features", gradient: "from-green-500 to-emerald-600" },
-    { icon: <Calendar className="w-6 h-6 text-white" />, title: "Academic Calendar", description: "GTU academic calendar with advanced features", gradient: "from-purple-500 to-violet-600" },
-    { icon: <TrendingUp className="w-6 h-6 text-white" />, title: "GTU Result", description: "Check GTU results with advanced features", gradient: "from-red-500 to-pink-600" },
-    { icon: <Lightbulb className="w-6 h-6 text-white" />, title: "GTU Tips & Solutions", description: "Paper solutions, viva tips, and writing answers", gradient: "from-yellow-500 to-orange-600" },
-    { icon: <Users className="w-6 h-6 text-white" />, title: "Student Community", description: "Connect with GTU students community", gradient: "from-cyan-500 to-blue-600" },
-    { icon: <ArrowUpDown className="w-6 h-6 text-white" />, title: "SPI to CPI Calculator", description: "Convert SPI to CPI with accurate calculations", gradient: "from-indigo-500 to-purple-600" },
-    { icon: <AlertTriangle className="w-6 h-6 text-white" />, title: "Backlog Checker", description: "Manual backlog checker tool for students", gradient: "from-red-500 to-rose-600" },
-    { icon: <Percent className="w-6 h-6 text-white" />, title: "Attendance Calculator", description: "Calculate your attendance percentage", gradient: "from-green-500 to-teal-600" },
-    { icon: <Clock className="w-6 h-6 text-white" />, title: "Exam Countdown", description: "Countdown timer for upcoming exams", gradient: "from-orange-500 to-red-600" },
-    { icon: <Timer className="w-6 h-6 text-white" />, title: "Study Timer", description: "Pomodoro study timer for effective learning", gradient: "from-pink-500 to-purple-600" },
-    { icon: <FileInput className="w-6 h-6 text-white" />, title: "Paper Merge Tool", description: "Merge multiple PDF papers into one file", gradient: "from-teal-500 to-cyan-600" },
-    { icon: <Heart className="w-6 h-6 text-white" />, title: "Contribute", description: "Help improve GTUWALA by contributing", gradient: "from-violet-500 to-purple-600" }
-  ];
+  // Filter cards by category
+  const resourceCards = Array.isArray(allCards) ? allCards.filter((card: any) => card.category === 'resources').sort((a: any, b: any) => a.sortOrder - b.sortOrder) : [];
+  const toolboxCards = Array.isArray(allCards) ? allCards.filter((card: any) => card.category === 'toolbox').sort((a: any, b: any) => a.sortOrder - b.sortOrder) : [];
+  const featureCards = Array.isArray(allCards) ? allCards.filter((card: any) => card.category === 'features').sort((a: any, b: any) => a.sortOrder - b.sortOrder) : [];
 
-  const featureCards = [
-    {
-      icon: <Zap className="w-8 h-8 text-white" />,
-      title: "Fast & Reliable",
-      description: "Quick access to all study materials with high-speed downloads",
-      gradient: "from-green-500 to-emerald-600"
-    },
-    {
-      icon: <RotateCcw className="w-8 h-8 text-white" />,
-      title: "Regular Updates",
-      description: "Daily updates with latest papers and study materials",
-      gradient: "from-blue-500 to-indigo-600"
-    },
-    {
-      icon: <Gift className="w-8 h-8 text-white" />,
-      title: "Free Forever", 
-      description: "All resources available free of cost for students",
-      gradient: "from-purple-500 to-pink-600"
+  // Gradient mappings for different categories
+  const getGradient = (category: string, index: number) => {
+    const gradients = {
+      resources: ['from-blue-500 to-blue-600', 'from-green-500 to-green-600', 'from-purple-500 to-purple-600'],
+      toolbox: [
+        'from-blue-500 to-indigo-600', 'from-green-500 to-emerald-600', 'from-purple-500 to-violet-600',
+        'from-red-500 to-pink-600', 'from-yellow-500 to-orange-600', 'from-cyan-500 to-blue-600',
+        'from-indigo-500 to-purple-600', 'from-red-500 to-rose-600', 'from-green-500 to-teal-600',
+        'from-orange-500 to-red-600', 'from-pink-500 to-purple-600', 'from-teal-500 to-cyan-600',
+        'from-violet-500 to-purple-600'
+      ],
+      features: ['from-green-500 to-emerald-600', 'from-blue-500 to-indigo-600', 'from-purple-500 to-pink-600']
+    };
+    const categoryGradients = (gradients as any)[category] || gradients.toolbox;
+    return categoryGradients[index % categoryGradients.length];
+  };
+
+  // Handle card click
+  const handleCardClick = (card: any) => {
+    if (card.redirectUrl) {
+      if (card.redirectUrl.startsWith('http')) {
+        window.open(card.redirectUrl, '_blank');
+      } else {
+        window.location.href = card.redirectUrl;
+      }
     }
-  ];
+  };
+
+
 
   return (
     <div>
@@ -107,17 +92,34 @@ export default function Landing() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {resourceCards.map((card, index) => (
-              <Card key={index} className="group cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-gray-800 border-0">
-                <CardContent className="p-8 text-center">
-                  <div className={`bg-gradient-to-br ${card.gradient} w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
-                    {card.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{card.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{card.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <Card key={index} className="bg-white dark:bg-gray-800 border-0">
+                  <CardContent className="p-8 text-center">
+                    <Skeleton className="w-16 h-16 rounded-xl mx-auto mb-6" />
+                    <Skeleton className="h-6 w-3/4 mx-auto mb-3" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-2/3 mx-auto" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              resourceCards.map((card: any, index: number) => (
+                <Card 
+                  key={card.id} 
+                  className={`group cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-gray-800 border-0 ${card.redirectUrl ? 'cursor-pointer' : 'cursor-default'}`}
+                  onClick={() => handleCardClick(card)}
+                >
+                  <CardContent className="p-8 text-center">
+                    <div className={`bg-gradient-to-br ${getGradient('resources', index)} w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                      <DynamicIcon iconName={card.icon} className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{card.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400">{card.description}</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </section>
 
@@ -133,17 +135,34 @@ export default function Landing() {
           </div>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {toolboxCards.map((card, index) => (
-              <Card key={index} className="group cursor-pointer hover:shadow-lg hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-gray-800 border-0">
-                <CardContent className="p-6">
-                  <div className={`bg-gradient-to-br ${card.gradient} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
-                    {card.icon}
-                  </div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{card.title}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{card.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 12 }).map((_, index) => (
+                <Card key={index} className="bg-white dark:bg-gray-800 border-0">
+                  <CardContent className="p-6">
+                    <Skeleton className="w-12 h-12 rounded-lg mb-4" />
+                    <Skeleton className="h-5 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-1" />
+                    <Skeleton className="h-4 w-2/3" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              toolboxCards.map((card: any, index: number) => (
+                <Card 
+                  key={card.id} 
+                  className={`group cursor-pointer hover:shadow-lg hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-gray-800 border-0 ${card.redirectUrl ? 'cursor-pointer' : 'cursor-default'}`}
+                  onClick={() => handleCardClick(card)}
+                >
+                  <CardContent className="p-6">
+                    <div className={`bg-gradient-to-br ${getGradient('toolbox', index)} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                      <DynamicIcon iconName={card.icon} className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{card.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{card.description}</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </section>
 
@@ -159,17 +178,34 @@ export default function Landing() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {featureCards.map((card, index) => (
-              <Card key={index} className="group cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-gray-800 border-0">
-                <CardContent className="p-8 text-center">
-                  <div className={`bg-gradient-to-br ${card.gradient} w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
-                    {card.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{card.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{card.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <Card key={index} className="bg-white dark:bg-gray-800 border-0">
+                  <CardContent className="p-8 text-center">
+                    <Skeleton className="w-16 h-16 rounded-xl mx-auto mb-6" />
+                    <Skeleton className="h-6 w-3/4 mx-auto mb-3" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-2/3 mx-auto" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              featureCards.map((card: any, index: number) => (
+                <Card 
+                  key={card.id} 
+                  className={`group cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 bg-white dark:bg-gray-800 border-0 ${card.redirectUrl ? 'cursor-pointer' : 'cursor-default'}`}
+                  onClick={() => handleCardClick(card)}
+                >
+                  <CardContent className="p-8 text-center">
+                    <div className={`bg-gradient-to-br ${getGradient('features', index)} w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                      <DynamicIcon iconName={card.icon} className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{card.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400">{card.description}</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </section>
       </div>

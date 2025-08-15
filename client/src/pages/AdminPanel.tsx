@@ -12,7 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Label } from '../components/ui/label';
 import { isUnauthorizedError } from '../lib/authUtils';
 import { apiRequest } from '../lib/queryClient';
-import { Shield, Bell, Settings, Plus, Edit, Save } from 'lucide-react';
+import { Shield, Bell, Settings, Plus, Edit, Save, ChevronDown } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 
 export default function AdminPanel() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -69,7 +70,7 @@ export default function AdminPanel() {
   });
 
   const { data: resourceCards } = useQuery({
-    queryKey: ['/api/admin/resource-cards'],
+    queryKey: ['/api/resource-cards/all'],
     enabled: isAdmin,
   });
 
@@ -214,20 +215,65 @@ export default function AdminPanel() {
         <TabsContent value="resources" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Manage Resource Cards</CardTitle>
+              <CardTitle>Manage Homepage Cards</CardTitle>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Configure homepage cards and their redirect URLs
+                Configure all homepage cards including Study Resources, GTU Toolbox, and Features
               </p>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {Array.isArray(resourceCards) && resourceCards.map((card: any) => (
-                <ResourceCardEditor
-                  key={card.id}
-                  card={card}
-                  onSave={(data) => resourceCardMutation.mutate({ id: card.id, data })}
-                  isLoading={resourceCardMutation.isPending}
-                />
-              ))}
+            <CardContent className="space-y-8">
+              {/* Study Resources Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
+                  📚 Explore GTU Study Resources
+                </h3>
+                {Array.isArray(resourceCards) && resourceCards
+                  .filter((card: any) => card.category === 'resources')
+                  .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
+                  .map((card: any) => (
+                    <ResourceCardEditor
+                      key={card.id}
+                      card={card}
+                      onSave={(data) => resourceCardMutation.mutate({ id: card.id, data })}
+                      isLoading={resourceCardMutation.isPending}
+                    />
+                  ))}
+              </div>
+
+              {/* GTU Toolbox Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
+                  🔧 GTU Toolbox
+                </h3>
+                {Array.isArray(resourceCards) && resourceCards
+                  .filter((card: any) => card.category === 'toolbox')
+                  .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
+                  .map((card: any) => (
+                    <ResourceCardEditor
+                      key={card.id}
+                      card={card}
+                      onSave={(data) => resourceCardMutation.mutate({ id: card.id, data })}
+                      isLoading={resourceCardMutation.isPending}
+                    />
+                  ))}
+              </div>
+
+              {/* Features Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">
+                  ✨ Platform Features
+                </h3>
+                {Array.isArray(resourceCards) && resourceCards
+                  .filter((card: any) => card.category === 'features')
+                  .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
+                  .map((card: any) => (
+                    <ResourceCardEditor
+                      key={card.id}
+                      card={card}
+                      onSave={(data) => resourceCardMutation.mutate({ id: card.id, data })}
+                      isLoading={resourceCardMutation.isPending}
+                    />
+                  ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -307,11 +353,25 @@ function ResourceCardEditor({
   const [description, setDescription] = useState(card.description);
   const [redirectUrl, setRedirectUrl] = useState(card.redirectUrl || '');
   const [isActive, setIsActive] = useState(card.isActive);
+  const [selectedIcon, setSelectedIcon] = useState(card.icon);
+
+  // Available icons (50+ icons from Lucide React)
+  const availableIcons = [
+    'FileText', 'Book', 'GraduationCap', 'Calculator', 'Megaphone', 'Calendar', 'TrendingUp',
+    'Lightbulb', 'Users', 'ArrowUpDown', 'AlertTriangle', 'Percent', 'Clock', 'Timer',
+    'FileInput', 'Heart', 'Zap', 'RotateCcw', 'Gift', 'Star', 'Shield', 'Award',
+    'Target', 'Bookmark', 'Download', 'Upload', 'Search', 'Filter', 'Globe', 'Mail',
+    'Phone', 'MessageSquare', 'Video', 'Image', 'Music', 'Play', 'Pause', 'Stop',
+    'SkipForward', 'SkipBack', 'Home', 'User', 'Settings', 'Edit', 'Trash', 'Plus',
+    'Minus', 'Check', 'X', 'ChevronLeft', 'ChevronRight', 'ChevronUp', 'ChevronDown',
+    'Database', 'Server', 'Wifi', 'Bluetooth', 'Battery', 'Power', 'Lock', 'Unlock'
+  ];
 
   const handleSave = () => {
     onSave({
       title,
       description,
+      icon: selectedIcon,
       redirectUrl: redirectUrl || null,
       isActive
     });
@@ -319,6 +379,17 @@ function ResourceCardEditor({
 
   return (
     <div className="border rounded-lg p-4 space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <h4 className="font-medium text-gray-900 dark:text-white">
+          {card.category === 'resources' ? '📚 Study Resources' : 
+           card.category === 'toolbox' ? '🔧 GTU Toolbox' : 
+           card.category === 'features' ? '✨ Features' : 'Card'} - {card.title}
+        </h4>
+        <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+          Order: {card.sortOrder}
+        </span>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
@@ -326,6 +397,7 @@ function ResourceCardEditor({
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            placeholder="Card title"
           />
         </div>
         
@@ -339,6 +411,25 @@ function ResourceCardEditor({
           />
         </div>
       </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="icon">Icon</Label>
+        <Select value={selectedIcon} onValueChange={setSelectedIcon}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select an icon" />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            {availableIcons.map((iconName) => (
+              <SelectItem key={iconName} value={iconName}>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm">{iconName}</span>
+                  <span className="text-xs text-gray-500">({iconName})</span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
@@ -347,6 +438,7 @@ function ResourceCardEditor({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
+          placeholder="Card description"
         />
       </div>
       
@@ -362,7 +454,7 @@ function ResourceCardEditor({
         
         <Button
           onClick={handleSave}
-          disabled={isLoading}
+          disabled={isLoading || !title.trim() || !description.trim()}
           size="sm"
         >
           <Save className="w-4 h-4 mr-2" />
